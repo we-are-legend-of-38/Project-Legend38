@@ -1,4 +1,4 @@
-# BOILER PLATE
+# Project Legend38
 
 ## Using this Repository
 
@@ -14,3 +14,5 @@ repo down to your computer.
 ## ES2015+ support
 
 Spports ES2015+ by transpiling files with [Babel](https://babeljs.io/). Any JavaScript feature included in the [latest preset](https://babeljs.io/docs/plugins/preset-latest/) can be used. CSS files and HTML will also be transpiled and automatically inserted where intended.
+
+## Getting Started 
