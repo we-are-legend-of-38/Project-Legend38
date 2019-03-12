@@ -16,8 +16,6 @@ app.get("/venues/:loc", (req, res) => {
   if (loc === "udefined") {
     res.status = 404;
     res.send("error: location needed to search for venues.");
-  } else {
-    console.log(loc);
   }
 });
 
