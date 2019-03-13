@@ -4,32 +4,35 @@ export default class App extends Component {
   constructor() {
     super();
     this.state = {
+      lat: 30.2,
+      lng: -97.7,
       message: "Hello World"
     };
     this.handleLocation = this.handleLocation.bind(this);
-    this.geolocate = this.geolocate.bind(this)
-    this.geolocateSuccess = this.geolocateSuccess.bind(this)
+    this.geolocate = this.geolocate.bind(this);
+    this.geolocateSuccess = this.geolocateSuccess.bind(this);
+    this.onGeolocateError = this.onGeolocateError.bind(this);
   }
 
-  geolocate () {
+  geolocate() {
     if (window.navigator && window.navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         this.geolocateSuccess,
-        onGeolocateError
+        this.onGeolocateError
       );
     }
-  };
+  }
 
-  geolocateSuccess (coordinates) {
+  geolocateSuccess(coordinates) {
     const { latitude, longitude } = coordinates.coords;
     console.log("Found coordinates: ", latitude, longitude);
     this.setState({
-      lat = latitude,
-      lng = longitude
-    })
-  };
+      lat: latitude,
+      lng: longitude
+    });
+  }
 
-  onGeolocateError (error) {
+  onGeolocateError(error) {
     console.warn(error.code, error.message);
 
     if (error.code === 1) {
@@ -42,10 +45,10 @@ export default class App extends Component {
       // timeout
       // log an error
     }
-  };
+  }
 
   handleLocation() {
-    geolocate();
+    this.geolocate();
     console.log("yup");
   }
   componentDidMount() {}
@@ -55,6 +58,9 @@ export default class App extends Component {
       <div>
         <p>{this.state.message}</p>
         <button onClick={this.handleLocation}>Find Venues Near Me</button>
+        <p>
+          {this.state.lat} - {this.state.lng}
+        </p>
       </div>
     );
   }
