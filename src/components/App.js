@@ -8,6 +8,7 @@ export default class App extends Component {
     this.state = {
       location: `30.3,-97.7`,
       venueList: [],
+      eventsList: {},
       message: "What's going on?"
     };
     this.handleLocation = this.handleLocation.bind(this);
@@ -15,6 +16,7 @@ export default class App extends Component {
     this.geolocateSuccess = this.geolocateSuccess.bind(this);
     this.onGeolocateError = this.onGeolocateError.bind(this);
     this.getVenueList = this.getVenueList.bind(this);
+    this.getEventsList = this.getEventsList.bind(this);
   }
 
   geolocate() {
@@ -62,12 +64,21 @@ export default class App extends Component {
       .catch(err => console.log(err));
   }
 
+  getEventsList(venueArray) {
+    axios
+      .get(`http://localhost:3000/events/${venueArray}`)
+      .then(events => console.log("events!!!", events))
+      .catch(err => console.log(err));
+  }
+
   handleLocation() {
     this.geolocate();
     this.getVenueList(this.state.location);
   }
+
   componentDidMount() {
     this.getVenueList(this.state.location);
+    setTimeout(() => this.getEventsList.bind(this, this.state.venueList), 700);
   }
 
   render() {
