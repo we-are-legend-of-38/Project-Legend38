@@ -15,7 +15,9 @@ const filter = arr => {
         category.name === "Nightlife Spot" ||
         category.name === "Performing Arts Venue"
       ) {
-        filtered.push(venue);
+        if (venue.events) {
+          filtered.push(venue);
+        }
       }
     });
   });
