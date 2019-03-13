@@ -1,17 +1,20 @@
 import React, { Component } from "react";
+import VenueList from "./VenueList/VenueList";
+import axios from "axios";
 
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      lat: 30.2,
-      lng: -97.7,
-      message: "Hello World"
+      location: `30.3,-97.7`,
+      venueList: [],
+      message: "What's going on?"
     };
     this.handleLocation = this.handleLocation.bind(this);
     this.geolocate = this.geolocate.bind(this);
     this.geolocateSuccess = this.geolocateSuccess.bind(this);
     this.onGeolocateError = this.onGeolocateError.bind(this);
+    this.getVenueList = this.getVenueList.bind(this);
   }
 
   geolocate() {
@@ -25,16 +28,18 @@ export default class App extends Component {
 
   geolocateSuccess(coordinates) {
     const { latitude, longitude } = coordinates.coords;
-    console.log("Found coordinates: ", latitude, longitude);
+    console.log(
+      "Found coordinates: ",
+      latitude.toFixed(1),
+      longitude.toFixed(1)
+    );
     this.setState({
-      lat: latitude,
-      lng: longitude
+      location: `${latitude.toFixed(1)},${longitude.toFixed(1)}`
     });
   }
 
   onGeolocateError(error) {
     console.warn(error.code, error.message);
-
     if (error.code === 1) {
       // they said no
       // redirect to search by city name
@@ -47,20 +52,35 @@ export default class App extends Component {
     }
   }
 
+  getVenueList(loc) {
+    axios
+      .get(`http://localhost:3000/venues/${loc}`)
+      .then(response => {
+        this.setState({ venueList: response.data });
+        console.log(this.state.venueList);
+      })
+      .catch(err => console.log(err));
+  }
+
   handleLocation() {
     this.geolocate();
-    console.log("yup");
+    this.getVenueList(this.state.location);
   }
-  componentDidMount() {}
+  componentDidMount() {
+    this.getVenueList(this.state.location);
+  }
 
   render() {
+    const VenueInfo = this.state.venueList.map((venue, index) => {
+      return <VenueList info={venue} key={index} />;
+    });
+
     return (
       <div>
         <p>{this.state.message}</p>
         <button onClick={this.handleLocation}>Find Venues Near Me</button>
-        <p>
-          {this.state.lat} - {this.state.lng}
-        </p>
+        <p>{this.state.location}</p>
+        <ol>{VenueInfo}</ol>
       </div>
     );
   }
