@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import VenueList from "./VenueList/VenueList";
 import axios from "axios";
+import VenueList from "./VenueList/VenueList";
+import VenueInfo from "./VenueInfo/VenueInfo";
 import EventList from "./EventList/EventList";
 
 export default class App extends Component {
@@ -10,8 +11,11 @@ export default class App extends Component {
       location: `30.3,-97.7`,
       venueList: [],
       eventsList: [],
+      venueInfoList: [],
+      venueIDList: [],
       message: "What's going on?"
     };
+
     this.handleLocation = this.handleLocation.bind(this);
     this.geolocate = this.geolocate.bind(this);
     this.geolocateSuccess = this.geolocateSuccess.bind(this);
@@ -46,14 +50,22 @@ export default class App extends Component {
     console.warn(error.code, error.message);
     if (error.code === 1) {
       // they said no
-      // toDo: redirect to search by city name
+      // ToDo: redirect to search by city name
     } else if (error.code === 2) {
       // position unavailable
-      // toDo: redirect to search by city name
+      // ToDo: redirect to search by city name
     } else if (error.code === 3) {
       // timeout
-      // toDo: log an error
+      // ToDo: log an error
     }
+  }
+
+  populateVenueInfoList() {
+    const venueIDArray = this.state.venueList.map(venue => venue.id);
+    this.setState({
+      venueIDList: venueIDArray
+    });
+    console.log(venueIDArray);
   }
 
   getVenueList(loc) {
@@ -61,6 +73,7 @@ export default class App extends Component {
       .get(`http://localhost:3000/venues/${loc}`)
       .then(response => {
         this.setState({ venueList: response.data });
+        this.populateVenueInfoList();
         console.log(this.state.venueList);
       })
       .catch(err => console.log(err));
@@ -73,8 +86,8 @@ export default class App extends Component {
       .catch(err => console.log(err));
   }
 
-  getVenueEvents(e) {
-    e.target.preventDefault();
+  getBandEvents() {
+    //ToDo: handle clicking a band name
     axios.get("http://localhost:3000/bandInfo/?");
   }
 
